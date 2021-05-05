@@ -1,6 +1,5 @@
 package com.example.nitm;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Canvas;
@@ -15,10 +14,22 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.Socket;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -38,40 +49,31 @@ public class MainActivity extends AppCompatActivity {
 
     protected void transmission(){}
 
-
-    class AsyncRequest extends AsyncTask<String, Integer, String> {
-        @Override
-        protected String doInBackground(String... arg) {
-            try {
-                System.out.println("ttttttttttttttttttttttttttttttttttttttttttt");
-                Socket s = new Socket("127.0.0.1", 9090);
-                System.out.println("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
-                getStructure("");
-            } catch (IOException e) {
+    public int getStructure(String link) throws IOException {
+        OkHttpClient client = new OkHttpClient();
+        String url = "https://reqres.in/api/users?page=2";
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
             }
-            return "as";
-        }
-    }
-
-    public static int getStructure(String link) throws IOException {
-        System.out.println("\t\t\t\t1");
-        Socket s = new Socket("127.0.0.1", 9090);
-        System.out.println("\t\t\t\t2");
-        InputStream in = s.getInputStream();
-        System.out.println("\t\t\t\t3");
-        OutputStream out = s.getOutputStream();
-        System.out.println("\t\t\t\t4");
-        System.out.println(out);
-        String str = link;
-        byte buf[] = str.getBytes();
-        out.write(buf);
-        int size;
-        byte buf_out[] = new byte[1024];
-        while ((size = in.read(buf_out)) != -1) {
-            System.out.print(new String(buf_out, 0, size));
-        }
-        s.close();
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    final String myResponse = response.body().string();
+                    MainActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            System.out.println("1111111111111111111111111111111111111111111111111111111111111111111111");
+                            System.out.println(myResponse);
+                        }
+                    });
+                }
+            }
+        });
         return 0;
     }
 
@@ -86,10 +88,16 @@ public class MainActivity extends AppCompatActivity {
         Button[] twoVertex = new Button[2]; // array that contain from 0 to 2 vertex to draw an edge between it
         vertexView = new DrawView(this, 0, 0, 100, 200);
         relativeLayout.addView(vertexView);
+        try {
+            getStructure("123");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
 //        String aw[] = new String[] {"1", "2", "3"};
 //        String bw[][] = new String[][] {{"1", "3"}, {"1", "2"}, {"2", "3"}};
 //        loadTheStructure(new String[]{"1", "2", "3"}, bw);
-        new AsyncRequest().execute("123", "/ajax", "foo=bar");
 
     }
 
