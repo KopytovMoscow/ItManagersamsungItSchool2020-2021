@@ -42,4 +42,4 @@ def dictToJson(dictionary):
     return json_dictionary
 
 
-print(python_parser("KopytovMoscow/GitYellowCircles"))
+print(python_parser("KopytovMoscow/Task2/blob/master/main.py"))
