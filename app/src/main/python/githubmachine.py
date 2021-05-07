@@ -4,18 +4,15 @@ import json
 
 class aye:
     def __init__(self):
-        self.g = Github("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")
+        self.g = Github("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")
         self.user = self.g.get_user_by_id(57916666)
 
-    def getProjects(self, link):
-        # # print("\t", link.decode("utf-8"))
-        # for i in self.user.get_repos():
-        #     print(i.name, end=" ")
+    def getProjects(self, name, repo, path):
         print()
-        repo = self.g.get_repo("KopytovMoscow/Task2")
+        print(f"{name}/{repo}")
+        repo = self.g.get_repo(f"{name}/{repo}")
         print(repo)
-        contents = repo.get_contents("")
-        file_content = repo.get_contents('main.py')
+        file_content = repo.get_contents(path)
         return file_content.decoded_content.decode()
         # for content_file in contents:
         #     print(content_file.decoded_content)
@@ -25,7 +22,7 @@ def python_parser(link):
     name, repo, path = link.split("/")[0], link.split("/")[1], "/".join(link.split("/")[2:])
     print(name, repo, path)
     a = aye()
-    code = str(a.getProjects(link)).split("\n")
+    code = str(a.getProjects(name, repo, path)).split("\n")
     structure = {}
     independent = []
     for i in code:
@@ -45,4 +42,4 @@ def dictToJson(dictionary):
     return json_dictionary
 
 
-print(python_parser("KopytovMoscow/Task2/blob/master/main.py"))
+print(python_parser("pallets/flask/tests/test_appctx.py"))
