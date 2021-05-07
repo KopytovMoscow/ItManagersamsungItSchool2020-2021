@@ -8,11 +8,12 @@ class aye:
         self.user = self.g.get_user_by_id(57916666)
 
     def getProjects(self, link):
-        # print("\t", link.decode("utf-8"))
-        for i in self.user.get_repos():
-            print(i.name, end=" ")
+        # # print("\t", link.decode("utf-8"))
+        # for i in self.user.get_repos():
+        #     print(i.name, end=" ")
         print()
-        repo = self.g.get_repo(link)
+        repo = self.g.get_repo("KopytovMoscow/Task2")
+        print(repo)
         contents = repo.get_contents("")
         file_content = repo.get_contents('main.py')
         return file_content.decoded_content.decode()
@@ -21,6 +22,8 @@ class aye:
 
 
 def python_parser(link):
+    name, repo, path = link.split("/")[0], link.split("/")[1], "/".join(link.split("/")[2:])
+    print(name, repo, path)
     a = aye()
     code = str(a.getProjects(link)).split("\n")
     structure = {}
