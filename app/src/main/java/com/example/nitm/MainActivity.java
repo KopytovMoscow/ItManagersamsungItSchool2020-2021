@@ -46,12 +46,10 @@ public class MainActivity extends AppCompatActivity {
     Map<Button, ArrayList> dictionary = new HashMap<Button, ArrayList>();
     Context thisContext;
     private DrawView vertexView;
-
-    protected void transmission(){}
+    OkHttpClient client = new OkHttpClient();
 
     public int getStructure(String link) throws IOException {
-        OkHttpClient client = new OkHttpClient();
-        String url = "https://reqres.in/api/users?page=2";
+        String url = "http://192.168.1.44:443/";
         Request request = new Request.Builder()
                 .url(url)
                 .build();

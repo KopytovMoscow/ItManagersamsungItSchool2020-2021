@@ -27,7 +27,7 @@ class DrawView extends View {
         sx1 = sx;
         sy1 = sy;
         Paint paint = new Paint();
-        paint.setColor(Color.WHITE); // установим белый цвет
+        paint.setColor(Color.GREEN); // установим белый цвет
         paint.setStrokeWidth(5);
 //        paint.setStyle(Paint.Style.FILL); // заливаем
         paint.setAntiAlias(true);
@@ -36,7 +36,7 @@ class DrawView extends View {
     //    @Override
     protected void onDraw(Canvas canvas) {
         Paint pai = new Paint();
-        pai.setColor(Color.WHITE); // установим белый цвет
+        pai.setColor(Color.GREEN); // установим белый цвет
         pai.setStrokeWidth(5);
         pai.setStyle(Paint.Style.FILL); // заливаем
         pai.setAntiAlias(true);

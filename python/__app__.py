@@ -14,7 +14,7 @@ def get_file(link):
 
 class aye:
     def __init__(self):
-        self.g = Github("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")
+        self.g = Github("")
         self.user = self.g.get_user_by_id(57916666)
 
     def getProjects(self, name, repo, path):
@@ -55,3 +55,6 @@ def dictToJson(dictionary):
 
 if __name__ == '__main__':
     app.run(host='192.168.1.44', port=443)
+
+#http://192.168.1.44:443/KopytovMoscow%D0%AEItManagersamsungItSchool2020-2021%D0%AEapp%D0%AEsrc%D0%AEmain%D0%AEpython%D0%AE__app__.py
+#http://192.168.1.44:443/pallets%D0%AEflask%D0%AEtests%D0%AEtest_appctx.py
