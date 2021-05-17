@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private Canvas canvas;
     private TextView textView;
     EditText blockName;
+    EditText blockLink;
     ImageView imageView;
     Button[] twoVertex = new Button[2];
     Map<Button, ArrayList> dictionary = new HashMap<Button, ArrayList>();
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     OkHttpClient client = new OkHttpClient();
 
     public int getStructure(String link) throws IOException {
-        String url = "http://192.168.1.44:443/";
+        String url = "http://192.168.1.44:443/" + link;
         Request request = new Request.Builder()
                 .url(url)
                 .build();
@@ -86,11 +87,7 @@ public class MainActivity extends AppCompatActivity {
         Button[] twoVertex = new Button[2]; // array that contain from 0 to 2 vertex to draw an edge between it
         vertexView = new DrawView(this, 0, 0, 100, 200);
         relativeLayout.addView(vertexView);
-        try {
-            getStructure("123");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        blockLink = (EditText) findViewById(R.id.editTextTextPersonName2);
 //        String aw[] = new String[] {"1", "2", "3"};
 //        String bw[][] = new String[][] {{"1", "3"}, {"1", "2"}, {"2", "3"}};
 //        loadTheStructure(new String[]{"1", "2", "3"}, bw);
@@ -205,20 +202,13 @@ public class MainActivity extends AppCompatActivity {
         System.out.println(gitStructure);
     }
 
-
-
     public void Load(View view) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setTitle("Import structure from github")
-                .setMessage("Закройте окно!")
-                .setCancelable(false)
-                .setNegativeButton("ОК, иду на балкон",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-        AlertDialog alert = builder.create();
-        alert.show();
+        System.out.println(String.valueOf(blockLink.getText()).replace("/", "Ю"));
+        try {
+            getStructure(String.valueOf(blockLink.getText()).replace("/", "Ю"));
+        } catch (IOException e) {
+            System.out.println("111111112222222222222222222222223333333333333333333444444444444555555555555566666666666666");
+            e.printStackTrace();
+        }
     }
 }

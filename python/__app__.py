@@ -14,7 +14,7 @@ def get_file(link):
 
 class aye:
     def __init__(self):
-        self.g = Github("")
+        self.g = Github("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")
         self.user = self.g.get_user_by_id(57916666)
 
     def getProjects(self, name, repo, path):
@@ -29,9 +29,9 @@ class aye:
 
 
 def python_parser(link):
-    print("\t\t", link)
+    print("фы", link)
     name, repo, path = link.split("/")[0], link.split("/")[1], "/".join(link.split("/")[2:])
-    print(name, repo, path)
+    print(name, repo, path, 222222222222)
     a = aye()
     code = str(a.getProjects(name, repo, path)).split("\n")
     structure = {}
