@@ -91,8 +91,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
 //        String aw[] = new String[] {"1", "2", "3"};
 //        String bw[][] = new String[][] {{"1", "3"}, {"1", "2"}, {"2", "3"}};
 //        loadTheStructure(new String[]{"1", "2", "3"}, bw);
@@ -207,9 +205,11 @@ public class MainActivity extends AppCompatActivity {
         System.out.println(gitStructure);
     }
 
+
+
     public void Load(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setTitle("Важное сообщение!")
+        builder.setTitle("Import structure from github")
                 .setMessage("Закройте окно!")
                 .setCancelable(false)
                 .setNegativeButton("ОК, иду на балкон",
