@@ -1,5 +1,4 @@
 package com.example.nitm;
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Canvas;
@@ -16,6 +15,12 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -49,6 +54,23 @@ public class MainActivity extends AppCompatActivity {
     private DrawView vertexView;
     OkHttpClient client = new OkHttpClient();
 
+    public String fromStringtoList(String answer){ // convert String from http response to List
+        String[] v = new String[] {}; // that string contain all vertexes
+        String[][] e = new String[][] {}; // that string contain all edges => vertex_1 - vertex_2 - ... - vertex_n
+
+        Gson g = new Gson();
+        JsonObject jsonObject = new JsonParser().parse(answer).getAsJsonObject();
+
+
+//        System.out.println(jsonObject.getAsJsonArray("def test_basic_url_generation(app):"));
+//        System.out.println(jsonObject.getAsJsonArray("def test_basic_url_generation(app):"));
+//        JsonArray jsA = jsonObject.getAsJsonArray("def test_basic_url_generation(app):");
+//        ArrayList<String> jjj = new Gson().fromJson(jsA, new TypeToken<List<String>>() {}.getType());
+//        System.out.println(jjj);
+//        System.out.println(answer.indexOf("def test_url_generation_without_context_fails():"));
+        return "";
+    }
+
     public int getStructure(String link) throws IOException {
         String url = "http://192.168.1.44:443/" + link;
         Request request = new Request.Builder()
@@ -67,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             System.out.println("1111111111111111111111111111111111111111111111111111111111111111111111");
-                            System.out.println(myResponse);
+                            fromStringtoList(myResponse); // get String[][]
                         }
                     });
                 }
@@ -199,7 +221,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void alternativeStructureBuilder(Map<String, List<String>> gitStructure){
-        System.out.println(gitStructure);
     }
 
     public void Load(View view) {
@@ -207,7 +228,6 @@ public class MainActivity extends AppCompatActivity {
         try {
             getStructure(String.valueOf(blockLink.getText()).replace("/", "Ю"));
         } catch (IOException e) {
-            System.out.println("111111112222222222222222222222223333333333333333333444444444444555555555555566666666666666");
             e.printStackTrace();
         }
     }

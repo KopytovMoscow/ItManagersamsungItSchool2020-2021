@@ -14,7 +14,7 @@ def get_file(link):
 
 class aye:
     def __init__(self):
-        self.g = Github("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")
+        self.g = Github("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")
         self.user = self.g.get_user_by_id(57916666)
 
     def getProjects(self, name, repo, path):
@@ -23,6 +23,7 @@ class aye:
         repo = self.g.get_repo(f"{name}/{repo}")
         print(repo)
         file_content = repo.get_contents(path)
+
         return file_content.decoded_content.decode()
         # for content_file in contents:
         #     print(content_file.decoded_content)
