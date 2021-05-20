@@ -45,13 +45,23 @@ def python_parser(link):
                 independent = i
             else:
                 structure[independent].append(i.lstrip())
+    # edges = []
+    # for i in structure:
+    #     if structure[i]:
+    #         for j in structure[i]:
+    #             edges.append([i, j])
+    #     else:
+    #         edges.append([i, ""])
+    #     print("\t", i)
     # print(structure)
     return dictToJson(structure)
-
+    # return dictToJson(edges)
 
 def dictToJson(dictionary):
     json_dictionary = json.dumps(dictionary)
     return json_dictionary
+
+print(python_parser("pallets/flask/tests/test_appctx.py"))
 
 
 if __name__ == '__main__':
@@ -59,3 +69,4 @@ if __name__ == '__main__':
 
 #http://192.168.1.44:443/KopytovMoscow%D0%AEItManagersamsungItSchool2020-2021%D0%AEapp%D0%AEsrc%D0%AEmain%D0%AEpython%D0%AE__app__.py
 #http://192.168.1.44:443/pallets%D0%AEflask%D0%AEtests%D0%AEtest_appctx.py
+#http://192.168.1.44:443/KopytovMoscowЮTask3Юmain.py

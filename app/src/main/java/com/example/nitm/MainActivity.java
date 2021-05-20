@@ -22,6 +22,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -37,7 +40,9 @@ import java.net.Socket;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -54,14 +59,37 @@ public class MainActivity extends AppCompatActivity {
     private DrawView vertexView;
     OkHttpClient client = new OkHttpClient();
 
+    public static Map<String, String> jsonToMap(String t) throws JSONException {
+
+        HashMap<String, String> map = new HashMap<String, String>();
+        JSONObject jObject = new JSONObject(t);
+        Iterator<?> keys = jObject.keys();
+
+        while( keys.hasNext() ){
+            String key = (String)keys.next();
+            String value = jObject.getString(key);
+            map.put(key, value);
+
+        }
+
+        System.out.println("json : "+jObject);
+        System.out.println("map : "+map);
+        return map;
+    }
+
     public String fromStringtoList(String answer){ // convert String from http response to List
         String[] v = new String[] {}; // that string contain all vertexes
         String[][] e = new String[][] {}; // that string contain all edges => vertex_1 - vertex_2 - ... - vertex_n
 
         Gson g = new Gson();
-        JsonObject jsonObject = new JsonParser().parse(answer).getAsJsonObject();
+        JsonObject jsonobject = new JsonParser().parse(answer).getAsJsonObject();
 
+        System.out.println(g.fromJson(answer, Map.class).keySet());
+        Object a = g.fromJson(answer, Map.class);
+        System.out.println(answer);
+        System.out.println(g.fromJson(answer, Map.class).keySet().toArray());
 
+        System.out.println("12321321312321321321321");
 //        System.out.println(jsonObject.getAsJsonArray("def test_basic_url_generation(app):"));
 //        System.out.println(jsonObject.getAsJsonArray("def test_basic_url_generation(app):"));
 //        JsonArray jsA = jsonObject.getAsJsonArray("def test_basic_url_generation(app):");
@@ -69,6 +97,21 @@ public class MainActivity extends AppCompatActivity {
 //        System.out.println(jjj);
 //        System.out.println(answer.indexOf("def test_url_generation_without_context_fails():"));
         return "";
+    }
+
+    public void addGraphToScreen(Map<String, String> graph){
+        int lenGraph = graph.keySet().size();
+        List<String> mapKeySet = new ArrayList<>(graph.keySet());
+        for(int i = 0; i < lenGraph; i++){
+            String instantKey = mapKeySet.get(i);
+            String child = graph.get(instantKey);
+            Button indexButton = BlockInitialized(instantKey);
+            Button childButton = BlockInitialized(child);
+//            List<Button> allChildButtons = [childButton];
+//            List<Button> allChildButtons = Collections.singletonList(childButton);
+            ArrayList<Button> allChildButtons = new ArrayList<>(Arrays.asList(childButton));
+            dictionary.put(indexButton, allChildButtons);
+        }
     }
 
     public int getStructure(String link) throws IOException {
@@ -90,6 +133,13 @@ public class MainActivity extends AppCompatActivity {
                         public void run() {
                             System.out.println("1111111111111111111111111111111111111111111111111111111111111111111111");
                             fromStringtoList(myResponse); // get String[][]
+                            try {
+                                System.out.println("ayeayey aye  aye aye aye aue aye aye");
+                                HashMap<String, String> gitMap = (HashMap<String, String>) jsonToMap(myResponse);
+                                addGraphToScreen(gitMap);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
                     });
                 }
@@ -204,24 +254,6 @@ public class MainActivity extends AppCompatActivity {
         BlockInitialized(name);
     }
 
-    protected void loadTheStructure(String[] v, String[][] e){
-        Map<String, Button> bb = new HashMap<String, Button>();
-        for (int i=0; i < v.length; i++){
-            System.out.println(v[i]);
-            Button a11 = BlockInitialized(v[i]);
-//            bb.put(, new Button(this));
-            bb.put(v[i], (Button) a11);}
-        for (int i=0; i < e.length; i++){
-            ArrayList l = new ArrayList();
-
-            l.add(bb.get(e[i][1]));
-            System.out.println(e[i][0] + " 888888888888888 " + e[i][1]);
-            dictionary.put((Button) bb.get(e[i][0]), (ArrayList) l);
-        }
-    }
-
-    protected void alternativeStructureBuilder(Map<String, List<String>> gitStructure){
-    }
 
     public void Load(View view) {
         System.out.println(String.valueOf(blockLink.getText()).replace("/", "Ю"));

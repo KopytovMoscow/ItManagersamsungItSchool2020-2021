@@ -76,7 +76,7 @@
             android:layout_marginBottom="30dp"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="pallets/flask/tests/test_appctx.py" />
+            android:text="KopytovMoscowЮTask3Юmain.py"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button2"
