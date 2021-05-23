@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +49,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     private RelativeLayout relativeLayout;
@@ -61,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
     Context thisContext;
     private DrawView vertexView;
     OkHttpClient client = new OkHttpClient();
+    TabHost tabHost;
 
     public static Map<String, String> jsonToMap(String t) throws JSONException {
 
@@ -149,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
         blockLink = (EditText) findViewById(R.id.editTextTextPersonName2);
 
         // TabHost:
-        TabHost tabHost = (TabHost) findViewById(android.R.id.tabhost);
+        tabHost = (TabHost) findViewById(android.R.id.tabhost);
         tabHost.setup();
         TabHost.TabSpec tabSpec;
         tabSpec = tabHost.newTabSpec("tag1");
@@ -174,25 +177,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected Button BlockInitialized(String text){
-
-//        Button new_btn = new Button(new ContextThemeWrapper(this, R.style.Widget_MaterialComponents_Button_OutlinedButton), null, 0);
-
         Button new_btn = new Button(this);
+        new_btn.setX(-10);
+        new_btn.setX(0);
+        new_btn.setBackgroundColor(Color.DKGRAY);
         new_btn.setText(text);
         relativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout);
         imageView = (ImageView) findViewById(R.id.aaa);
         thisContext = this;
-
-//        relativeLayout.addView(aye);
         new_btn.setText(text);
-        new_btn.setLayoutParams(
-                new RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.WRAP_CONTENT,
-                        RelativeLayout.LayoutParams.WRAP_CONTENT)
-        );
+        RelativeLayout.LayoutParams RL_LP = new RelativeLayout.LayoutParams(200, 200);
+        new_btn.setLayoutParams(RL_LP);
         new_btn.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onLongClick(View v){System.out.println("onLongClick"); return false; }
+            public boolean onLongClick(View v){System.out.println("onLongClick"); return false;}
         });
 
         new_btn.setOnClickListener(new DoubleClickListener() {
@@ -204,8 +202,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDoubleClick(View v){
                 RelativeLayout.LayoutParams linnear_lay = new RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.WRAP_CONTENT,
-                        RelativeLayout.LayoutParams.WRAP_CONTENT); // высота и
+                        200,
+                        200); // высота и
                 linnear_lay.leftMargin = (int) new_btn.getX();
                 linnear_lay.topMargin = (int) new_btn.getY();
                 if (twoVertex[0] == null){
@@ -224,8 +222,8 @@ public class MainActivity extends AppCompatActivity {
                             (twoVertex[0].getLayoutParams().width / 2));
                     int sy = (int) (twoVertex[0].getY() +
                             (twoVertex[0].getLayoutParams().height / 2));
-                    int ex = (int) (v.getX() + (v.getLayoutParams().width / 2));
-                    int ey = (int) (v.getY() + (v.getLayoutParams().height / 2));
+                    int ex = (int) (v.getX() - (v.getLayoutParams().width / 2));
+                    int ey = (int) (v.getY() - (v.getLayoutParams().height / 2));
                     vertexView.invalidate(dictionary);
                     twoVertex[0].setBackgroundColor(Color.DKGRAY);
                     twoVertex[0] = null;
@@ -264,6 +262,35 @@ public class MainActivity extends AppCompatActivity {
     public void newBlock(View view){
         String name = String.valueOf(blockName.getText());
         BlockInitialized(name);
+    }
+
+    public void HideOrShowMenu(View view){
+        System.out.println("--HideOrShowMenu--");
+    }
+
+    public void deleteBlock(View view){
+        if(twoVertex[0] != null)
+        {
+            System.out.println(dictionary.containsKey(twoVertex[0]));
+            dictionary.remove((Button) twoVertex[0]);
+            int dictSize = dictionary.keySet().size();
+            List<Button> buttonsKey = new ArrayList<Button>(dictionary.keySet());
+            for(int i = 0; i < buttonsKey.size(); i++) {
+                Button key = buttonsKey.get(i);
+                Object o = dictionary.get(key);
+                ArrayList al1 = new ArrayList();
+                al1 = (ArrayList) o;
+                assert al1 != null;
+                if(al1.contains(twoVertex[0])){
+                    Objects.requireNonNull(dictionary.get(key)).remove(twoVertex[0]);
+                }
+                System.out.println(al1);
+                System.out.println(o.getClass());
+            }
+            relativeLayout.removeView(twoVertex[0]);
+            twoVertex[0] = null;
+            vertexView.invalidate(dictionary);
+        }
     }
 
     public void Load(View view) {
