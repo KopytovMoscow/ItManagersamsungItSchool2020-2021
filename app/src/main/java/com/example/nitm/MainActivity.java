@@ -5,13 +5,16 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.ContextThemeWrapper;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -77,39 +80,26 @@ public class MainActivity extends AppCompatActivity {
         return map;
     }
 
-    public String fromStringtoList(String answer){ // convert String from http response to List
-        String[] v = new String[] {}; // that string contain all vertexes
-        String[][] e = new String[][] {}; // that string contain all edges => vertex_1 - vertex_2 - ... - vertex_n
-
-        Gson g = new Gson();
-        JsonObject jsonobject = new JsonParser().parse(answer).getAsJsonObject();
-
-        System.out.println(g.fromJson(answer, Map.class).keySet());
-        Object a = g.fromJson(answer, Map.class);
-        System.out.println(answer);
-        System.out.println(g.fromJson(answer, Map.class).keySet().toArray());
-
-        System.out.println("12321321312321321321321");
-//        System.out.println(jsonObject.getAsJsonArray("def test_basic_url_generation(app):"));
-//        System.out.println(jsonObject.getAsJsonArray("def test_basic_url_generation(app):"));
-//        JsonArray jsA = jsonObject.getAsJsonArray("def test_basic_url_generation(app):");
-//        ArrayList<String> jjj = new Gson().fromJson(jsA, new TypeToken<List<String>>() {}.getType());
-//        System.out.println(jjj);
-//        System.out.println(answer.indexOf("def test_url_generation_without_context_fails():"));
-        return "";
-    }
-
     public void addGraphToScreen(Map<String, String> graph){
         int lenGraph = graph.keySet().size();
         List<String> mapKeySet = new ArrayList<>(graph.keySet());
         for(int i = 0; i < lenGraph; i++){
             String instantKey = mapKeySet.get(i);
             String child = graph.get(instantKey);
+            assert child != null;
+            String[] divided = child.split(",");
+
             Button indexButton = BlockInitialized(instantKey);
-            Button childButton = BlockInitialized(child);
+//            Button childButton = BlockInitialized(child);
 //            List<Button> allChildButtons = [childButton];
 //            List<Button> allChildButtons = Collections.singletonList(childButton);
-            ArrayList<Button> allChildButtons = new ArrayList<>(Arrays.asList(childButton));
+            ArrayList<Button> allChildButtons = new ArrayList<>(Arrays.asList());
+
+            for (String word : divided) {
+                System.out.println(word);
+                allChildButtons.add(BlockInitialized(word));
+            }
+
             dictionary.put(indexButton, allChildButtons);
         }
     }
@@ -131,8 +121,6 @@ public class MainActivity extends AppCompatActivity {
                     MainActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            System.out.println("1111111111111111111111111111111111111111111111111111111111111111111111");
-                            fromStringtoList(myResponse); // get String[][]
                             try {
                                 System.out.println("ayeayey aye  aye aye aye aue aye aye");
                                 HashMap<String, String> gitMap = (HashMap<String, String>) jsonToMap(myResponse);
@@ -148,7 +136,6 @@ public class MainActivity extends AppCompatActivity {
         return 0;
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -160,13 +147,36 @@ public class MainActivity extends AppCompatActivity {
         vertexView = new DrawView(this, 0, 0, 100, 200);
         relativeLayout.addView(vertexView);
         blockLink = (EditText) findViewById(R.id.editTextTextPersonName2);
-//        String aw[] = new String[] {"1", "2", "3"};
-//        String bw[][] = new String[][] {{"1", "3"}, {"1", "2"}, {"2", "3"}};
-//        loadTheStructure(new String[]{"1", "2", "3"}, bw);
+
+        // TabHost:
+        TabHost tabHost = (TabHost) findViewById(android.R.id.tabhost);
+        tabHost.setup();
+        TabHost.TabSpec tabSpec;
+        tabSpec = tabHost.newTabSpec("tag1");
+        tabSpec.setIndicator("add new block");
+        tabSpec.setContent(R.id.add);
+        tabHost.addTab(tabSpec);
+        tabSpec = tabHost.newTabSpec("tag2");
+        tabSpec.setIndicator("import from GitHub");
+        tabSpec.setContent(R.id.Import);
+        tabHost.addTab(tabSpec);
+        tabSpec = tabHost.newTabSpec("tag3");
+        View v = getLayoutInflater().inflate(R.layout.tab_header, null);
+        tabSpec.setIndicator("settings");
+        tabSpec.setContent(R.id.settings);
+        tabHost.addTab(tabSpec);
+        tabHost.setCurrentTabByTag("tag2");
+        tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+            public void onTabChanged(String tabId) {
+            }
+        });
 
     }
 
     protected Button BlockInitialized(String text){
+
+//        Button new_btn = new Button(new ContextThemeWrapper(this, R.style.Widget_MaterialComponents_Button_OutlinedButton), null, 0);
+
         Button new_btn = new Button(this);
         new_btn.setText(text);
         relativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout);
@@ -217,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
                     int ex = (int) (v.getX() + (v.getLayoutParams().width / 2));
                     int ey = (int) (v.getY() + (v.getLayoutParams().height / 2));
                     vertexView.invalidate(dictionary);
-                    twoVertex[0].setBackgroundColor(Color.GRAY);
+                    twoVertex[0].setBackgroundColor(Color.DKGRAY);
                     twoVertex[0] = null;
                     twoVertex[1] = null;
                 }
@@ -237,9 +247,11 @@ public class MainActivity extends AppCompatActivity {
                 RelativeLayout.LayoutParams linnear_lay = new RelativeLayout.LayoutParams(
                         new_btn.getWidth(),
                         new_btn.getHeight()); // высота и
-                linnear_lay.leftMargin = (int) event.getRawX() - 200; // отступ
-                linnear_lay.topMargin = (int) event.getRawY() - 300; // отступ
+                linnear_lay.leftMargin = (int) event.getRawX() -
+                        (int) v.getLayoutParams().width / 2; // отступ
+                linnear_lay.topMargin = (int) event.getRawY() - 2 * v.getHeight();
                 new_btn.setLayoutParams(linnear_lay);
+                System.out.println(v.getHeight());
                 vertexView.invalidate(dictionary);
                 return false;
             }
@@ -253,7 +265,6 @@ public class MainActivity extends AppCompatActivity {
         String name = String.valueOf(blockName.getText());
         BlockInitialized(name);
     }
-
 
     public void Load(View view) {
         System.out.println(String.valueOf(blockLink.getText()).replace("/", "Ю"));

@@ -43,8 +43,6 @@ class DrawView extends View {
         if (dictionary != null){
             for (Map.Entry<Button, ArrayList> entry : dictionary.entrySet()) {
                 ArrayList btns = (ArrayList) entry.getValue();
-                System.out.println(btns);
-                System.out.println(btns.get(0));
                 int sx = (int) (entry.getKey().getX() +
                         (entry.getKey().getLayoutParams().width / 2));
                 int sy = (int) (entry.getKey().getY() +
