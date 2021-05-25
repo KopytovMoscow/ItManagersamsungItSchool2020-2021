@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TableLayout;
@@ -64,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
     private DrawView vertexView;
     OkHttpClient client = new OkHttpClient();
     TabHost tabHost;
+    private int mX;
+    private int mY;
 
     public static Map<String, String> jsonToMap(String t) throws JSONException {
 
@@ -151,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
         relativeLayout.addView(vertexView);
         blockLink = (EditText) findViewById(R.id.editTextTextPersonName2);
 
+
         // TabHost:
         tabHost = (TabHost) findViewById(android.R.id.tabhost);
         tabHost.setup();
@@ -201,6 +205,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onDoubleClick(View v){
+                System.out.println("onDoubleClickonDoubleClickonDoubleClickonDoubleClickonDoubleClick");
                 RelativeLayout.LayoutParams linnear_lay = new RelativeLayout.LayoutParams(
                         200,
                         200); // высота и
@@ -209,7 +214,6 @@ public class MainActivity extends AppCompatActivity {
                 if (twoVertex[0] == null){
                     twoVertex[0] = (Button) v;
                     v.setBackgroundColor(Color.YELLOW);
-
                 }
                 else{
                     List ast = new ArrayList();
@@ -218,12 +222,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                     ast.add((Button) v);
                     dictionary.put(twoVertex[0], (ArrayList) ast);
-                    int sx = (int) (twoVertex[0].getX() +
-                            (twoVertex[0].getLayoutParams().width / 2));
-                    int sy = (int) (twoVertex[0].getY() +
-                            (twoVertex[0].getLayoutParams().height / 2));
-                    int ex = (int) (v.getX() - (v.getLayoutParams().width / 2));
-                    int ey = (int) (v.getY() - (v.getLayoutParams().height / 2));
                     vertexView.invalidate(dictionary);
                     twoVertex[0].setBackgroundColor(Color.DKGRAY);
                     twoVertex[0] = null;
@@ -236,20 +234,35 @@ public class MainActivity extends AppCompatActivity {
 
         new_btn.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                int a = (int) v.getX();
-                String b = Integer.toString(a);
-                int c = (int) v.getY();
-                String d = Integer.toString(c);
-                textView.setText(b + " " + d);
-                RelativeLayout.LayoutParams linnear_lay = new RelativeLayout.LayoutParams(
-                        new_btn.getWidth(),
-                        new_btn.getHeight()); // высота и
-                linnear_lay.leftMargin = (int) event.getRawX() -
-                        (int) v.getLayoutParams().width / 2; // отступ
-                linnear_lay.topMargin = (int) event.getRawY() - 2 * v.getHeight();
-                new_btn.setLayoutParams(linnear_lay);
-                System.out.println(v.getHeight());
+            public boolean onTouch(View view, MotionEvent event) {
+                //Определение координат через getRawX() и getRawY() дает
+                //координаты по отношению к размерам экрана устройства:
+                final int X = (int) event.getRawX();
+                final int Y = (int) event.getRawY();
+
+                switch (event.getAction() & MotionEvent.ACTION_MASK) {
+
+                    //ACTION_DOWN срабатывает при прикосновении к экрану,
+                    //здесь определяется начальное стартовое положение объекта:
+                    case MotionEvent.ACTION_DOWN:
+                        RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
+                        mX = X - lParams.leftMargin;
+                        mY = Y - lParams.topMargin;
+                        break;
+
+                    //ACTION_MOVE обрабатывает случившиеся в процессе прикосновения изменения, здесь
+                    //содержится информация о последней точке, где находится объект после окончания действия прикосновения ACTION_DOWN:
+                    case MotionEvent.ACTION_MOVE:
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view
+                                .getLayoutParams();
+                        layoutParams.leftMargin = X - mX;
+                        layoutParams.topMargin = Y - mY;
+                        layoutParams.rightMargin = -250;
+                        layoutParams.bottomMargin = -250;
+                        view.setLayoutParams(layoutParams);
+                        break;
+
+                }
                 vertexView.invalidate(dictionary);
                 return false;
             }
